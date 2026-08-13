@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\LaptopCommerce.Identity.Domain\LaptopCommerce.Identity.Domain.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\LaptopCommerce.Application.Abstractions\LaptopCommerce.Application.Abstractions.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

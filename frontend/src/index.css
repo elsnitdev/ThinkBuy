@@ -1,0 +1,321 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
+
+/* ==========================================================================
+   THINKBUY — HỆ MÀU
+
+   Chia hai tầng. Quy tắc: component KHÔNG bao giờ viết mã màu trực tiếp.
+
+   ┌─ Tầng 1 · BẢNG MÀU GỐC ────────────────────────────────────────────────┐
+   │ Các thang màu thô. Chỉ sửa ở đây khi muốn đổi tông toàn hệ thống.      │
+   │   navy   — khối cấu trúc và chữ, neo #172554 ở bậc 900                 │
+   │   brand  — màu xanh chủ đạo cho tương tác, neo #1556d6 ở bậc 500       │
+   │   coral  — điểm nhấn, chỉ dùng cho giảm giá                            │
+   └────────────────────────────────────────────────────────────────────────┘
+   ┌─ Tầng 2 · MÀU THEO VAI TRÒ ────────────────────────────────────────────┐
+   │ Đặt tên theo CÔNG DỤNG, không theo màu. Đây là thứ component dùng.     │
+   │ Đổi "màu của giá tiền" chỉ cần sửa --price, không phải đi tìm         │
+   │ từng chỗ viết text-navy-900.                                           │
+   └────────────────────────────────────────────────────────────────────────┘
+
+   Muốn đổi màu xanh chủ đạo toàn site: sửa đúng một dòng --brand-500.
+   ========================================================================== */
+
+:root {
+  /* ------------------------------------------------------------------ *
+   * TẦNG 1 — BẢNG MÀU GỐC
+   * ------------------------------------------------------------------ */
+
+  /* Navy — nền tối, chữ, đường viền đậm */
+  --navy-50: #f2f5fa;
+  --navy-100: #e3e9f4;
+  --navy-200: #c5d1e7;
+  --navy-300: #9aaed2;
+  --navy-400: #6a83b5;
+  --navy-500: #47619a;
+  --navy-600: #33497d;
+  --navy-700: #263a66;
+  --navy-800: #1d2e58;
+  --navy-900: #172554;
+  --navy-950: #0d1636;
+
+  /* Brand — xanh chủ đạo, mọi thứ bấm được đều dùng thang này */
+  --brand-50: #eff4fe;
+  --brand-100: #dbe7fd;
+  --brand-200: #bcd2fb;
+  --brand-300: #8fb4f6;
+  --brand-400: #4d89ec;
+  --brand-500: #1556d6;
+  --brand-600: #1246b0;
+  --brand-700: #0f3a8f;
+
+  /* Coral — dành riêng cho giảm giá, không dùng chỗ khác */
+  --coral-100: #ffe8e2;
+  --coral-500: #e8452c;
+  --coral-600: #cf3419;
+
+  /* Xanh lá — trạng thái tích cực (còn hàng, đã xác minh) */
+  --leaf-100: #e3f6e8;
+  --leaf-600: #1f8a44;
+
+  /* Vàng — sao đánh giá */
+  --gold-400: #f5a623;
+
+  /* ------------------------------------------------------------------ *
+   * TẦNG 2 — MÀU THEO VAI TRÒ
+   * ------------------------------------------------------------------ */
+
+  /* Thương hiệu / tương tác */
+  --brand: var(--brand-500);
+  --brand-hover: var(--brand-600);
+  --brand-active: var(--brand-700);
+  --brand-soft: var(--brand-50); /* nền nhạt cho ô icon */
+  --brand-line: var(--brand-400); /* viền khi rê chuột */
+  --on-brand: #ffffff; /* chữ nằm trên nền brand */
+
+  /* Bề mặt */
+  --surface: #f6f8fc; /* nền trang */
+  --surface-card: #ffffff; /* thẻ, hộp nội dung */
+  --surface-sunken: var(--navy-50); /* ô ảnh, khối thông số, hộp giá */
+  --surface-dark: var(--navy-900); /* header chính, banner */
+  --surface-darkest: var(--navy-950); /* dải tiện ích, footer */
+
+  /* Chữ */
+  --text-heading: var(--navy-950);
+  --text-body: var(--navy-800);
+  --text-soft: #64748b; /* chú thích, nhãn phụ */
+  --text-on-dark: #ffffff;
+  --text-on-dark-soft: var(--navy-300);
+
+  /* Đường kẻ */
+  --line: #dde5f0;
+  --line-strong: #cbd6e6;
+  --line-dark: var(--navy-800); /* viền trên nền tối */
+
+  /* Giá tiền */
+  --price: var(--navy-900); /* giá đang bán */
+  --price-old: var(--text-soft); /* giá gạch ngang */
+  --sale: var(--coral-500); /* nền nhãn giảm giá */
+  --sale-hover: var(--coral-600); /* nút "Mua ngay" khi rê chuột */
+  --sale-text: var(--coral-600); /* chữ phần trăm giảm */
+  --sale-soft: var(--coral-100);
+
+  /* Trạng thái */
+  --success: var(--leaf-600);
+  --success-soft: var(--leaf-100);
+  --star: var(--gold-400);
+
+  --radius: 0.375rem;
+
+  /* ------------------------------------------------------------------ *
+   * Token của shadcn/ui — trỏ vào tầng 2 để đồng bộ với phần còn lại
+   * ------------------------------------------------------------------ */
+  --background: var(--surface);
+  --foreground: var(--text-heading);
+  --card: var(--surface-card);
+  --card-foreground: var(--text-heading);
+  --popover: var(--surface-card);
+  --popover-foreground: var(--text-heading);
+  --primary: var(--brand);
+  --primary-foreground: var(--on-brand);
+  --secondary: var(--navy-100);
+  --secondary-foreground: var(--text-body);
+  --muted: #eef2f8;
+  --muted-foreground: var(--text-soft);
+  --accent: var(--brand-soft);
+  --accent-foreground: var(--brand-700);
+  --destructive: var(--coral-600);
+  --border: var(--line);
+  --input: var(--line-strong);
+  --ring: var(--brand-line);
+  --chart-1: var(--brand-500);
+  --chart-2: #2aa3c8;
+  --chart-3: var(--navy-700);
+  --chart-4: var(--coral-500);
+  --chart-5: #3fae70;
+  --sidebar: var(--surface-card);
+  --sidebar-foreground: var(--text-heading);
+  --sidebar-primary: var(--brand);
+  --sidebar-primary-foreground: var(--on-brand);
+  --sidebar-accent: var(--brand-soft);
+  --sidebar-accent-foreground: var(--brand-700);
+  --sidebar-border: var(--line);
+  --sidebar-ring: var(--brand-line);
+}
+
+/* Chế độ tối: chỉ cần lật lại tầng 2, tầng 1 giữ nguyên */
+.dark {
+  --brand: var(--brand-400);
+  --brand-hover: var(--brand-300);
+  --brand-soft: var(--navy-800);
+  --on-brand: var(--navy-950);
+
+  --surface: var(--navy-950);
+  --surface-card: #14204a;
+  --surface-sunken: var(--navy-800);
+  --surface-dark: var(--navy-900);
+  --surface-darkest: var(--navy-950);
+
+  --text-heading: #eef2f8;
+  --text-body: #dbe3ef;
+  --text-soft: var(--navy-300);
+
+  --line: rgb(255 255 255 / 12%);
+  --line-strong: rgb(255 255 255 / 16%);
+
+  --price: #eef2f8;
+
+  --background: var(--surface);
+  --foreground: var(--text-heading);
+  --card: var(--surface-card);
+  --card-foreground: var(--text-heading);
+  --popover: var(--surface-card);
+  --popover-foreground: var(--text-heading);
+  --primary: var(--brand);
+  --primary-foreground: var(--on-brand);
+  --secondary: var(--navy-800);
+  --secondary-foreground: var(--text-heading);
+  --muted: var(--navy-800);
+  --muted-foreground: var(--text-soft);
+  --accent: var(--navy-800);
+  --accent-foreground: var(--text-heading);
+  --destructive: #f2694f;
+  --border: var(--line);
+  --input: var(--line-strong);
+  --ring: var(--brand-400);
+}
+
+/* ==========================================================================
+   Mở các token trên thành tiện ích Tailwind.
+   Tầng 2 cho ra: bg-brand, text-price, bg-surface-dark, border-line…
+   Tầng 1 cho ra: bg-brand-600, text-navy-400… khi cần sắc độ cụ thể.
+   ========================================================================== */
+@theme inline {
+  /* Token shadcn */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Tầng 2 — vai trò */
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-active: var(--brand-active);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-line: var(--brand-line);
+  --color-on-brand: var(--on-brand);
+
+  --color-surface: var(--surface);
+  --color-surface-card: var(--surface-card);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-surface-dark: var(--surface-dark);
+  --color-surface-darkest: var(--surface-darkest);
+
+  --color-heading: var(--text-heading);
+  --color-body: var(--text-body);
+  --color-soft: var(--text-soft);
+  --color-on-dark: var(--text-on-dark);
+  --color-on-dark-soft: var(--text-on-dark-soft);
+
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-line-dark: var(--line-dark);
+
+  --color-price: var(--price);
+  --color-price-old: var(--price-old);
+  --color-sale: var(--sale);
+  --color-sale-hover: var(--sale-hover);
+  --color-sale-text: var(--sale-text);
+  --color-sale-soft: var(--sale-soft);
+
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-star: var(--star);
+
+  /* Tầng 1 — khi cần sắc độ cụ thể */
+  --color-navy-50: var(--navy-50);
+  --color-navy-100: var(--navy-100);
+  --color-navy-200: var(--navy-200);
+  --color-navy-300: var(--navy-300);
+  --color-navy-400: var(--navy-400);
+  --color-navy-500: var(--navy-500);
+  --color-navy-600: var(--navy-600);
+  --color-navy-700: var(--navy-700);
+  --color-navy-800: var(--navy-800);
+  --color-navy-900: var(--navy-900);
+  --color-navy-950: var(--navy-950);
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-coral-100: var(--coral-100);
+  --color-coral-500: var(--coral-500);
+  --color-coral-600: var(--coral-600);
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 6px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family:
+      system-ui,
+      -apple-system,
+      'Segoe UI',
+      Roboto,
+      'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Giá tiền dùng chữ số đều bề ngang để cột số thẳng hàng */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+}
+
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-[1280px] px-4 sm:px-6;
+  }
+}

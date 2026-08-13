@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="9.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.9" />
+    <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\LaptopCommerce.Infrastructure.Shared\LaptopCommerce.Infrastructure.Shared.csproj" />
+    <ProjectReference Include="..\..\Modules\Identity\LaptopCommerce.Identity.Endpoints\LaptopCommerce.Identity.Endpoints.csproj" />
+    <ProjectReference Include="..\..\Modules\Identity\LaptopCommerce.Identity.Infrastructure\LaptopCommerce.Identity.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\LaptopCommerce.Catalog.Endpoints\LaptopCommerce.Catalog.Endpoints.csproj" />
+    <ProjectReference Include="..\..\Modules\Catalog\LaptopCommerce.Catalog.Infrastructure\LaptopCommerce.Catalog.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Inventory\LaptopCommerce.Inventory.Endpoints\LaptopCommerce.Inventory.Endpoints.csproj" />
+    <ProjectReference Include="..\..\Modules\Inventory\LaptopCommerce.Inventory.Infrastructure\LaptopCommerce.Inventory.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Cart\LaptopCommerce.Cart.Endpoints\LaptopCommerce.Cart.Endpoints.csproj" />
+    <ProjectReference Include="..\..\Modules\Cart\LaptopCommerce.Cart.Infrastructure\LaptopCommerce.Cart.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Ordering\LaptopCommerce.Ordering.Endpoints\LaptopCommerce.Ordering.Endpoints.csproj" />
+    <ProjectReference Include="..\..\Modules\Ordering\LaptopCommerce.Ordering.Infrastructure\LaptopCommerce.Ordering.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Review\LaptopCommerce.Review.Endpoints\LaptopCommerce.Review.Endpoints.csproj" />
+    <ProjectReference Include="..\..\Modules\Review\LaptopCommerce.Review.Infrastructure\LaptopCommerce.Review.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Wishlist\LaptopCommerce.Wishlist.Endpoints\LaptopCommerce.Wishlist.Endpoints.csproj" />
+    <ProjectReference Include="..\..\Modules\Wishlist\LaptopCommerce.Wishlist.Infrastructure\LaptopCommerce.Wishlist.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Tracking\LaptopCommerce.Tracking.Endpoints\LaptopCommerce.Tracking.Endpoints.csproj" />
+    <ProjectReference Include="..\..\Modules\Tracking\LaptopCommerce.Tracking.Infrastructure\LaptopCommerce.Tracking.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Recommendation\LaptopCommerce.Recommendation.Endpoints\LaptopCommerce.Recommendation.Endpoints.csproj" />
+    <ProjectReference Include="..\..\Modules\Recommendation\LaptopCommerce.Recommendation.Infrastructure\LaptopCommerce.Recommendation.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\AI\LaptopCommerce.AI.Endpoints\LaptopCommerce.AI.Endpoints.csproj" />
+    <ProjectReference Include="..\..\Modules\AI\LaptopCommerce.AI.Infrastructure\LaptopCommerce.AI.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Analytics\LaptopCommerce.Analytics.Endpoints\LaptopCommerce.Analytics.Endpoints.csproj" />
+    <ProjectReference Include="..\..\Modules\Analytics\LaptopCommerce.Analytics.Infrastructure\LaptopCommerce.Analytics.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

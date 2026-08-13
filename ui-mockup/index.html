@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ThinkBuy — Laptop chính hãng, tư vấn bằng AI</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== TOP UTILITY BAR ===== -->
+<div class="topbar">
+  <div class="container topbar-inner">
+    <div class="topbar-left">
+      <span>🚚 Miễn phí giao hàng toàn quốc</span>
+      <span class="divider">|</span>
+      <span>☎ Hotline: 1900 6868</span>
+    </div>
+    <div class="topbar-right">
+      <a href="#">Tra cứu đơn hàng</a>
+      <span class="divider">|</span>
+      <a href="#">Đăng nhập</a>
+      <span class="divider">|</span>
+      <a href="#">Đăng ký</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <div class="container header-inner">
+    <a href="#" class="logo">
+      <span class="logo-mark">TB</span>
+      <span class="logo-text">Think<span class="accent">Buy</span></span>
+    </a>
+
+    <div class="search-box">
+      <select class="search-scope" id="searchScope">
+        <option>Tất cả</option>
+        <option>Laptop</option>
+        <option>Linh kiện</option>
+        <option>Phụ kiện</option>
+      </select>
+      <input type="text" id="searchInput" placeholder="Tìm laptop, ví dụ: Lenovo Legion, RAM 16GB…" autocomplete="off">
+      <button class="search-btn" aria-label="Tìm kiếm">
+        <svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35m1.35-5.15a7.5 7.5 0 11-15 0 7.5 7.5 0 0115 0z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="search-suggest" id="searchSuggest"></div>
+    </div>
+
+    <div class="header-actions">
+      <button class="icon-btn" id="assistantHeaderBtn" title="Trợ lý AI">
+        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a1 1 0 011 1v1.06A8.004 8.004 0 0120 12v2a2 2 0 01-2 2h-.28A3 3 0 0115 19h-1a1 1 0 010-2h1a1 1 0 001-1v-.28A2 2 0 0114.28 14H9.72A2 2 0 018 15.72V16a1 1 0 001 1h1a1 1 0 010 2H9a3 3 0 01-2.72-1.72H6a2 2 0 01-2-2v-2a8.004 8.004 0 017-7.94V3a1 1 0 011-1zm-3 9a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm6 0a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"/></svg>
+        <span class="label">Trợ lý AI</span>
+      </button>
+
+      <div class="dropdown-wrap">
+        <button class="icon-btn" id="wishlistBtn">
+          <svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 21s-7.5-4.6-10-9.3C.4 8.2 2 4.5 5.6 4A5.2 5.2 0 0112 6.6 5.2 5.2 0 0118.4 4C22 4.5 23.6 8.2 22 11.7 19.5 16.4 12 21 12 21z"/></svg>
+          <span class="badge" id="wishlistCount">0</span>
+          <span class="label">Yêu thích</span>
+        </button>
+      </div>
+
+      <div class="dropdown-wrap">
+        <button class="icon-btn" id="cartBtn">
+          <svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M3 4h2l2.4 12.2a2 2 0 002 1.8h8.2a2 2 0 002-1.7L21 8H6"/><circle cx="9" cy="20" r="1.3" fill="currentColor"/><circle cx="17" cy="20" r="1.3" fill="currentColor"/></svg>
+          <span class="badge" id="cartCount">0</span>
+          <span class="label">Giỏ hàng</span>
+        </button>
+      </div>
+
+      <div class="dropdown-wrap">
+        <button class="icon-btn" id="accountBtn">
+          <svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 12a4 4 0 100-8 4 4 0 000 8zM4 21a8 8 0 0116 0"/></svg>
+          <span class="label">Tài khoản</span>
+        </button>
+        <div class="dropdown-menu" id="accountMenu">
+          <a href="#">Đăng nhập</a>
+          <a href="#">Đăng ký</a>
+          <hr>
+          <a href="#">Đơn hàng của tôi</a>
+          <a href="#">Sổ địa chỉ</a>
+        </div>
+      </div>
+
+      <button class="hamburger" id="hamburgerBtn" aria-label="Mở menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== MAIN NAV / MEGA MENU ===== -->
+  <nav class="navbar" id="navbar">
+    <ul class="nav-list">
+      <li><a href="#" class="nav-link active">Trang chủ</a></li>
+
+      <li class="has-mega">
+        <button class="nav-link nav-trigger">Laptop <svg class="chev" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M6 9l6 6 6-6"/></svg></button>
+        <div class="mega-menu">
+          <div class="mega-col">
+            <h4>Theo nhu cầu</h4>
+            <a href="#">Laptop Gaming</a>
+            <a href="#">Laptop Đồ họa - Studio</a>
+            <a href="#">Laptop Văn phòng</a>
+            <a href="#">Laptop Mỏng nhẹ</a>
+            <a href="#">Laptop Sinh viên</a>
+          </div>
+          <div class="mega-col">
+            <h4>Theo thương hiệu</h4>
+            <a href="#">Lenovo</a>
+            <a href="#">Asus</a>
+            <a href="#">Dell</a>
+            <a href="#">HP</a>
+            <a href="#">Acer</a>
+            <a href="#">MSI</a>
+            <a href="#">Apple MacBook</a>
+          </div>
+          <div class="mega-col">
+            <h4>Theo tầm giá</h4>
+            <a href="#">Dưới 15 triệu</a>
+            <a href="#">15 - 20 triệu</a>
+            <a href="#">20 - 30 triệu</a>
+            <a href="#">30 - 50 triệu</a>
+            <a href="#">Trên 50 triệu</a>
+          </div>
+          <div class="mega-promo">
+            <div class="mega-promo-badge">ƯU ĐÃI THÁNG 7</div>
+            <p>Laptop Gaming AI</p>
+            <strong>Giảm đến 15%</strong>
+            <a href="#" class="btn btn-sm btn-light">Xem ngay →</a>
+          </div>
+        </div>
+      </li>
+
+      <li class="has-dropdown">
+        <button class="nav-link nav-trigger">Linh kiện <svg class="chev" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M6 9l6 6 6-6"/></svg></button>
+        <div class="dropdown-simple">
+          <a href="#">RAM Laptop</a>
+          <a href="#">Ổ cứng SSD</a>
+          <a href="#">Màn hình rời</a>
+          <a href="#">Card đồ họa</a>
+        </div>
+      </li>
+
+      <li class="has-dropdown">
+        <button class="nav-link nav-trigger">Phụ kiện <svg class="chev" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M6 9l6 6 6-6"/></svg></button>
+        <div class="dropdown-simple">
+          <a href="#">Chuột</a>
+          <a href="#">Bàn phím cơ</a>
+          <a href="#">Tai nghe</a>
+          <a href="#">Balo & túi chống sốc</a>
+          <a href="#">Hub & sạc dự phòng</a>
+        </div>
+      </li>
+
+      <li><a href="#" class="nav-link">Khuyến mãi <span class="tag-hot">HOT</span></a></li>
+      <li><a href="#" class="nav-link">Tin công nghệ</a></li>
+      <li><a href="#" class="nav-link">Liên hệ</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero container">
+  <div class="hero-slider" id="heroSlider">
+    <div class="hero-slide active" style="--from:#4338ca;--to:#7c3aed">
+      <div class="hero-copy">
+        <span class="hero-kicker">BỘ SƯU TẬP MỚI</span>
+        <h1>Laptop Gaming thế hệ mới<br>Hiệu năng vượt trội</h1>
+        <p>RTX 40-Series · Intel Core i7/i9 · Tản nhiệt kép — trả góp 0%</p>
+        <a href="#products" class="btn btn-accent">Khám phá ngay</a>
+      </div>
+    </div>
+    <div class="hero-slide" style="--from:#0f766e;--to:#0ea5e9">
+      <div class="hero-copy">
+        <span class="hero-kicker">DÀNH CHO DÂN VĂN PHÒNG</span>
+        <h1>Mỏng nhẹ - Pin trâu<br>Làm việc cả ngày dài</h1>
+        <p>Dưới 1.3kg · Pin đến 18 giờ · Giảm đến 20%</p>
+        <a href="#products" class="btn btn-accent">Mua sắm ngay</a>
+      </div>
+    </div>
+    <div class="hero-slide" style="--from:#b45309;--to:#dc2626">
+      <div class="hero-copy">
+        <span class="hero-kicker">TRỢ LÝ AI MUA SẮM</span>
+        <h1>Không biết chọn laptop nào?<br>Hỏi AI của ThinkBuy</h1>
+        <p>Nhập nhu cầu và ngân sách — AI gợi ý sản phẩm phù hợp nhất</p>
+        <a href="#" class="btn btn-accent" id="heroAiBtn">Trò chuyện với AI</a>
+      </div>
+    </div>
+    <button class="hero-arrow prev" id="heroPrev">‹</button>
+    <button class="hero-arrow next" id="heroNext">›</button>
+    <div class="hero-dots" id="heroDots"></div>
+  </div>
+
+  <div class="hero-side">
+    <div class="side-card">
+      <span>🎓 Sinh viên</span>
+      <strong>Giảm thêm 5%</strong>
+      <p>Khi xác thực thẻ sinh viên</p>
+    </div>
+    <div class="side-card">
+      <span>🔄 Đổi trả</span>
+      <strong>Trong 7 ngày</strong>
+      <p>1 đổi 1 nếu lỗi nhà sản xuất</p>
+    </div>
+    <div class="side-card">
+      <span>🛡 Bảo hành</span>
+      <strong>Chính hãng 24 tháng</strong>
+      <p>Tại trung tâm ủy quyền</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CATEGORY STRIP ===== -->
+<section class="container cat-strip">
+  <a href="#" class="cat-item"><span class="cat-icon">🎮</span>Gaming</a>
+  <a href="#" class="cat-item"><span class="cat-icon">💼</span>Văn phòng</a>
+  <a href="#" class="cat-item"><span class="cat-icon">🎨</span>Đồ họa</a>
+  <a href="#" class="cat-item"><span class="cat-icon">🪶</span>Mỏng nhẹ</a>
+  <a href="#" class="cat-item"><span class="cat-icon">🖱</span>Chuột</a>
+  <a href="#" class="cat-item"><span class="cat-icon">⌨️</span>Bàn phím</a>
+  <a href="#" class="cat-item"><span class="cat-icon">🎧</span>Tai nghe</a>
+  <a href="#" class="cat-item"><span class="cat-icon">🖥</span>Màn hình</a>
+</section>
+
+<!-- ===== FLASH SALE ===== -->
+<section class="container flash-sale">
+  <div class="flash-head">
+    <div class="flash-title">
+      <span class="flash-fire">⚡</span>
+      <h2>Flash Sale</h2>
+      <span class="flash-sub">Kết thúc sau</span>
+      <div class="countdown" id="countdown">
+        <span id="cdH">00</span>:<span id="cdM">00</span>:<span id="cdS">00</span>
+      </div>
+    </div>
+    <a href="#products" class="see-all">Xem tất cả →</a>
+  </div>
+  <div class="flash-track" id="flashTrack"></div>
+</section>
+
+<!-- ===== PRODUCT LISTING ===== -->
+<section class="container listing" id="products">
+  <aside class="filters">
+    <div class="filter-head">
+      <h3>Bộ lọc</h3>
+      <button id="clearFilters">Xóa lọc</button>
+    </div>
+
+    <div class="filter-group">
+      <h4>Thương hiệu</h4>
+      <label><input type="checkbox" value="Lenovo" class="f-brand"> Lenovo</label>
+      <label><input type="checkbox" value="Asus" class="f-brand"> Asus</label>
+      <label><input type="checkbox" value="Dell" class="f-brand"> Dell</label>
+      <label><input type="checkbox" value="HP" class="f-brand"> HP</label>
+      <label><input type="checkbox" value="Acer" class="f-brand"> Acer</label>
+      <label><input type="checkbox" value="MSI" class="f-brand"> MSI</label>
+      <label><input type="checkbox" value="Apple" class="f-brand"> Apple</label>
+    </div>
+
+    <div class="filter-group">
+      <h4>Khoảng giá</h4>
+      <label><input type="radio" name="f-price" value="0-15" class="f-price"> Dưới 15 triệu</label>
+      <label><input type="radio" name="f-price" value="15-20" class="f-price"> 15 - 20 triệu</label>
+      <label><input type="radio" name="f-price" value="20-30" class="f-price"> 20 - 30 triệu</label>
+      <label><input type="radio" name="f-price" value="30-50" class="f-price"> 30 - 50 triệu</label>
+      <label><input type="radio" name="f-price" value="50-999" class="f-price"> Trên 50 triệu</label>
+    </div>
+
+    <div class="filter-group">
+      <h4>Nhu cầu sử dụng</h4>
+      <label><input type="checkbox" value="Gaming" class="f-tag"> Gaming</label>
+      <label><input type="checkbox" value="Đồ họa" class="f-tag"> Đồ họa - Studio</label>
+      <label><input type="checkbox" value="Văn phòng" class="f-tag"> Văn phòng</label>
+      <label><input type="checkbox" value="Mỏng nhẹ" class="f-tag"> Mỏng nhẹ</label>
+      <label><input type="checkbox" value="Sinh viên" class="f-tag"> Sinh viên</label>
+    </div>
+
+    <div class="filter-group">
+      <h4>RAM</h4>
+      <label><input type="checkbox" value="8" class="f-ram"> 8 GB</label>
+      <label><input type="checkbox" value="16" class="f-ram"> 16 GB</label>
+      <label><input type="checkbox" value="32" class="f-ram"> 32 GB</label>
+    </div>
+
+    <div class="filter-banner">
+      <strong>Cần tư vấn?</strong>
+      <p>Hỏi Trợ lý AI để tìm laptop phù hợp với ngân sách của bạn.</p>
+      <button class="btn btn-sm btn-primary" id="filterAiBtn">Hỏi AI ngay</button>
+    </div>
+  </aside>
+
+  <div class="listing-main">
+    <div class="listing-toolbar">
+      <p id="resultCount">Hiển thị 1–8 trong 26 sản phẩm</p>
+      <div class="toolbar-actions">
+        <select id="sortSelect">
+          <option value="popular">Phổ biến nhất</option>
+          <option value="price-asc">Giá: Thấp đến cao</option>
+          <option value="price-desc">Giá: Cao đến thấp</option>
+          <option value="rating">Đánh giá cao nhất</option>
+          <option value="newest">Mới nhất</option>
+        </select>
+        <div class="view-toggle">
+          <button class="active" id="viewGrid" title="Dạng lưới">▦</button>
+          <button id="viewList" title="Dạng danh sách">☰</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-grid" id="productGrid"></div>
+
+    <div class="pagination" id="pagination"></div>
+  </div>
+</section>
+
+<!-- ===== RECOMMENDATION (AI) ===== -->
+<section class="container carousel-section">
+  <div class="section-head">
+    <div>
+      <span class="section-kicker">✨ Gợi ý bởi AI</span>
+      <h2>Dành riêng cho bạn</h2>
+    </div>
+    <div class="carousel-nav">
+      <button data-target="recoTrack" data-dir="-1">‹</button>
+      <button data-target="recoTrack" data-dir="1">›</button>
+    </div>
+  </div>
+  <div class="carousel-track" id="recoTrack"></div>
+</section>
+
+<!-- ===== RECENTLY VIEWED ===== -->
+<section class="container carousel-section">
+  <div class="section-head">
+    <div>
+      <span class="section-kicker">🕘 Lịch sử</span>
+      <h2>Sản phẩm đã xem</h2>
+    </div>
+    <div class="carousel-nav">
+      <button data-target="viewedTrack" data-dir="-1">‹</button>
+      <button data-target="viewedTrack" data-dir="1">›</button>
+    </div>
+  </div>
+  <div class="carousel-track" id="viewedTrack"></div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="container testimonials">
+  <div class="section-head center">
+    <span class="section-kicker">💬 Khách hàng nói gì</span>
+    <h2>Được tin tưởng bởi hơn 50.000 khách hàng</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p>"Được AI tư vấn đúng nhu cầu lập trình, máy chạy Docker mượt, giao hàng nhanh trong 2 ngày."</p>
+      <div class="testi-user"><span class="avatar">M</span><div><strong>Minh Anh</strong><small>Lập trình viên</small></div></div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p>"Giao diện dễ lọc theo tầm giá, so sánh cấu hình rõ ràng. Sẽ quay lại mua thêm phụ kiện."</p>
+      <div class="testi-user"><span class="avatar">H</span><div><strong>Hoàng Yến</strong><small>Thiết kế đồ họa</small></div></div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p>"Đặt hàng, theo dõi vận chuyển và đổi trả đều rất minh bạch. Nhân viên tư vấn nhiệt tình."</p>
+      <div class="testi-user"><span class="avatar">Đ</span><div><strong>Đức Trọng</strong><small>Sinh viên</small></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NEWSLETTER ===== -->
+<section class="newsletter">
+  <div class="container newsletter-inner">
+    <div>
+      <h3>Đăng ký nhận ưu đãi</h3>
+      <p>Nhận thông tin giảm giá laptop mới nhất, không spam.</p>
+    </div>
+    <form class="newsletter-form" id="newsletterForm">
+      <input type="email" placeholder="Nhập email của bạn" required>
+      <button type="submit" class="btn btn-accent">Đăng ký</button>
+    </form>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="footer-col">
+      <a href="#" class="logo footer-logo"><span class="logo-mark">TB</span><span class="logo-text">Think<span class="accent">Buy</span></span></a>
+      <p>Nền tảng bán laptop & linh kiện công nghệ, cá nhân hóa trải nghiệm mua sắm bằng AI.</p>
+      <div class="social-row">
+        <a href="#">Fb</a><a href="#">Zl</a><a href="#">Yt</a><a href="#">Ig</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Chính sách</h4>
+      <a href="#">Chính sách đổi trả</a>
+      <a href="#">Chính sách bảo hành</a>
+      <a href="#">Chính sách vận chuyển</a>
+      <a href="#">Phương thức thanh toán</a>
+    </div>
+    <div class="footer-col">
+      <h4>Danh mục</h4>
+      <a href="#">Laptop Gaming</a>
+      <a href="#">Laptop Văn phòng</a>
+      <a href="#">Linh kiện</a>
+      <a href="#">Phụ kiện</a>
+    </div>
+    <div class="footer-col">
+      <h4>Liên hệ</h4>
+      <p>Hotline: 1900 6868</p>
+      <p>Email: support@thinkbuy.vn</p>
+      <p>123 Đường Công Nghệ, Q.1, TP.HCM</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container footer-bottom-inner">
+      <span>© 2026 ThinkBuy — Đồ án học tập, không phải cửa hàng thật.</span>
+      <span class="pay-icons">VISA · MASTERCARD · MOMO · VNPAY · COD</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== CART DRAWER ===== -->
+<div class="overlay" id="overlay"></div>
+<aside class="cart-drawer" id="cartDrawer">
+  <div class="drawer-head">
+    <h3>Giỏ hàng của bạn</h3>
+    <button id="closeCart">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer">
+    <div class="cart-subtotal">
+      <span>Tạm tính</span>
+      <strong id="cartSubtotal">0₫</strong>
+    </div>
+    <button class="btn btn-accent btn-block">Tiến hành đặt hàng</button>
+    <button class="btn btn-outline btn-block" id="continueShopping">Tiếp tục mua sắm</button>
+  </div>
+</aside>
+
+<!-- ===== QUICK VIEW MODAL ===== -->
+<div class="modal-overlay" id="quickViewOverlay">
+  <div class="modal-box" id="quickViewBox"></div>
+</div>
+
+<!-- ===== AI ASSISTANT WIDGET ===== -->
+<button class="ai-fab" id="aiFab">
+  <span class="ai-fab-pulse"></span>
+  💬
+</button>
+<div class="ai-panel" id="aiPanel">
+  <div class="ai-panel-head">
+    <div>
+      <strong>Trợ lý mua sắm AI</strong>
+      <small>Luôn phản hồi dựa trên dữ liệu sản phẩm thật</small>
+    </div>
+    <button id="closeAi">✕</button>
+  </div>
+  <div class="ai-messages" id="aiMessages">
+    <div class="ai-msg bot">Xin chào! Cho mình biết ngân sách và nhu cầu sử dụng, mình sẽ gợi ý laptop phù hợp nhé.</div>
+    <div class="ai-msg user">Mình có khoảng 20 triệu, cần laptop lập trình và chạy Docker.</div>
+    <div class="ai-msg bot">
+      Với ngân sách 17–22 triệu cho lập trình, bạn nên ưu tiên RAM tối thiểu 16GB. Gợi ý 2 mẫu phù hợp:
+      <div class="ai-product-ref">📎 Lenovo ThinkBook 14 G6 — 19.490.000₫</div>
+      <div class="ai-product-ref">📎 Asus Vivobook Pro 15 — 21.990.000₫</div>
+    </div>
+  </div>
+  <form class="ai-input-row" id="aiForm">
+    <input type="text" id="aiInput" placeholder="Nhập câu hỏi của bạn…">
+    <button type="submit">➤</button>
+  </form>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

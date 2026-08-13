@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Minh hoạ laptop nhìn từ trên">
+<defs><linearGradient id="t" x1="0" y1="0" x2="0.6" y2="1">
+<stop offset="0%" stop-color="#3c4557"/><stop offset="100%" stop-color="#232a38"/>
+</linearGradient></defs>
+<ellipse cx="200" cy="242" rx="140" ry="10" fill="#232a38" opacity="0.13"/>
+<rect x="66" y="52" width="268" height="186" rx="12" fill="url(#t)"/>
+<rect x="74" y="60" width="252" height="170" rx="8" fill="#232a38" opacity="0.18"/>
+<!-- Dấu hiệu hãng ở giữa nắp -->
+<rect x="176" y="134" width="48" height="7" rx="3.5" fill="#505a6d" opacity="0.65"/>
+<rect x="176" y="147" width="30" height="4" rx="2" fill="#505a6d" opacity="0.4"/>
+
+</svg>

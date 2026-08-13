@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ui-mockup",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "http-server", "ui-mockup", "-p", "4173", "-c-1"],
+      "port": 4173
+    },
+    {
+      "name": "frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "frontend"],
+      "port": 3000
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300" role="img" aria-label="Minh hoạ cạnh bên laptop">
+<ellipse cx="200" cy="182" rx="146" ry="8" fill="#232a38" opacity="0.13"/>
+<!-- Thân máy dạng nêm: mỏng phía trước, dày phía sau -->
+<path d="M58 172 L342 172 A5 5 0 0 0 347 167 L347 143 A6 6 0 0 0 341 137 L64 152 A7 7 0 0 0 58 159 Z" fill="#3c4557"/>
+<path d="M58 172 L342 172 A5 5 0 0 0 347 167 L347 162 L58 166 Z" fill="#232a38"/>
+<!-- Cổng kết nối -->
+<rect x="110" y="156" width="22" height="6" rx="1.5" fill="#232a38"/>
+<rect x="142" y="157" width="13" height="5" rx="2.5" fill="#232a38"/>
+<rect x="165" y="157" width="13" height="5" rx="2.5" fill="#232a38"/>
+<rect x="250" y="154" width="26" height="7" rx="1.5" fill="#232a38"/>
+<circle cx="300" cy="157" r="3.4" fill="#232a38"/>
+<!-- Khe thoát nhiệt -->
+<g fill="#505a6d" opacity="0.5">
+<rect x="196" y="156" width="3" height="6" rx="1.5"/><rect x="203" y="156" width="3" height="6" rx="1.5"/>
+<rect x="210" y="156" width="3" height="6" rx="1.5"/><rect x="217" y="155" width="3" height="6" rx="1.5"/>
+</g>
+</svg>
