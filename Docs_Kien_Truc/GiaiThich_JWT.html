@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giải thích Khái niệm: JWT (JSON Web Token)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .jwt-box { word-break: break-all; font-family: monospace; }
+    </style>
+</head>
+<body class="text-gray-800 p-8">
+
+    <div class="max-w-5xl mx-auto bg-white p-10 rounded-xl shadow-lg border-t-8 border-purple-600">
+        
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-purple-700 mb-4">🔐 JWT (JSON Web Token) LÀ GÌ?</h1>
+            <p class="text-lg text-gray-600">Tuyệt chiêu bảo mật Stateless (Không lưu trạng thái) của các hệ thống hiện đại</p>
+        </div>
+
+        <!-- 1. VÍ DỤ ĐỜI THỰC: CHIẾC VÒNG TAY VIP -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b-2 border-purple-200 pb-2 flex items-center">
+                <span class="text-3xl mr-3">🎫</span> 1. Ví dụ thực tế: Đi quẩy ở Bar
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Cách cũ Session -->
+                <div class="bg-gray-50 p-5 rounded-lg border border-gray-200">
+                    <h4 class="font-bold text-gray-700 mb-2">❌ Cách cũ (Session/Cookie)</h4>
+                    <p class="text-gray-700 text-sm leading-relaxed">
+                        Bạn đến quán Bar, đưa CCCD cho Bảo vệ (Đăng nhập). Bảo vệ cầm sổ tay ghi lại: <em>"Số 1: Anh Tèo, thẻ thường"</em>.<br><br>
+                        Lát sau bạn vào quầy gọi rượu, Bartender lại phải chạy ra cửa hỏi ông Bảo vệ: <em>"Ê, số 1 là ai đấy, có được uống rượu xịn không?"</em>.<br><br>
+                        <strong>Nhược điểm:</strong> Ông bảo vệ (Server) phải nhớ tên của hàng ngàn khách. Quán đông quá, ông bảo vệ kiệt sức nhớ không nổi (Hết RAM).
+                    </p>
+                </div>
+                
+                <!-- Cách mới JWT -->
+                <div class="bg-purple-50 p-5 rounded-lg border border-purple-200">
+                    <h4 class="font-bold text-purple-700 mb-2">✅ Cách mới (JWT)</h4>
+                    <p class="text-gray-700 text-sm leading-relaxed">
+                        Bạn đến đưa CCCD (Đăng nhập). Bảo vệ kiểm tra thấy đúng, liền phát cho bạn một cái <strong>Vòng tay giấy có đóng mộc đỏ của quán</strong> (Đây chính là JWT).<br><br>
+                        Bạn đi gọi rượu, chỉ cần chìa cái Vòng tay ra. Bartender nhìn thấy <strong>Dấu mộc đỏ (Chữ ký số)</strong> là lập tức rót rượu. Không cần chạy đi hỏi bảo vệ nữa.<br><br>
+                        <strong>Ưu điểm:</strong> Quán có 1 triệu khách thì Server cũng không cần nhớ bất kỳ ai. Mọi thông tin (Tên gì, Role gì) đều nằm hết trên cái vòng tay khách tự đeo.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. CẤU TRÚC 3 PHẦN CỦA JWT -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b-2 border-purple-200 pb-2 flex items-center">
+                <span class="text-3xl mr-3">🧩</span> 2. Cấu trúc của một Token JWT
+            </h2>
+            <p class="mb-4 text-gray-700">Một chuỗi JWT nhìn qua tưởng mã hóa loằng ngoằng, nhưng thực chất nó gồm 3 phần được phân tách nhau bởi dấu chấm (<code>.</code>):</p>
+            
+            <div class="bg-gray-900 p-6 rounded-lg text-white mb-6">
+                <p class="jwt-box text-xl text-center font-bold tracking-wider">
+                    <span class="text-red-400">eyJhbGciOiJIUzI1NiI</span>.<span class="text-green-400">eyJ1c2VySWQiOjEsInJvbGUiOiJBZG1pbiJ9</span>.<span class="text-blue-400">SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c</span>
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-red-50 border-l-4 border-red-500 p-4">
+                    <h4 class="font-bold text-red-600">1. Header (Màu đỏ)</h4>
+                    <p class="text-sm text-gray-700 mt-2">Khai báo loại Token và thuật toán dùng để ký (Ví dụ: Thuật toán HS256).</p>
+                </div>
+                <div class="bg-green-50 border-l-4 border-green-500 p-4">
+                    <h4 class="font-bold text-green-600">2. Payload (Màu xanh lá)</h4>
+                    <p class="text-sm text-gray-700 mt-2">Chứa thông tin (Claims) cần thiết: Tên người dùng, Email, Quyền (Role: Admin/User), Thời gian hết hạn (EXP).</p>
+                </div>
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4">
+                    <h4 class="font-bold text-blue-600">3. Signature (Chữ ký - Xanh biển)</h4>
+                    <p class="text-sm text-gray-700 mt-2"><strong>QUAN TRỌNG NHẤT:</strong> Là dấu mộc đỏ. Được băm (Hash) từ Header + Payload + một <strong class="text-black">SECRET_KEY</strong> chỉ có Server mới biết.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. TẠI SAO HACKER KHÔNG THỂ LÀM GIẢ? -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b-2 border-purple-200 pb-2 flex items-center">
+                <span class="text-3xl mr-3">🛡️</span> 3. Chống Hacker làm giả Token
+            </h2>
+            <div class="bg-yellow-50 p-5 rounded border border-yellow-200">
+                <p class="text-gray-800 mb-3"><strong>Điểm mù thường gặp:</strong> Nội dung Payload (Màu xanh lá) hoàn toàn KHÔNG BỊ MÃ HÓA. Ai cũng có thể lên trang <em>jwt.io</em> để dịch ngược ra chữ bình thường.</p>
+                <p class="text-gray-800">
+                    <strong>Hỏi:</strong> Vậy nếu Hacker dịch ngược Payload, sửa lại <code>"role": "Admin"</code> rồi gửi lên Server thì sao?<br>
+                    <strong>Đáp:</strong> Bất kỳ sự thay đổi dù nhỏ nhất nào ở Header hoặc Payload cũng sẽ làm <strong>Sai lệch Chữ ký (Signature)</strong>. Khi Server nhận Token, nó sẽ lấy SECRET_KEY bí mật (giấu kín ở file appsettings.json của Server) để ký thử lại. Nếu chữ ký không khớp với chữ ký của Hacker gửi lên, Server lập tức ném ra đường báo lỗi <em>401 Unauthorized (Giấy tờ giả)</em>.
+                </p>
+            </div>
+        </div>
+
+        <!-- 4. LUỒNG CHẠY BẰNG BIỂU ĐỒ -->
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b-2 border-purple-200 pb-2 flex items-center">
+                <span class="text-3xl mr-3">🔄</span> 4. Luồng hoạt động trên Hệ thống
+            </h2>
+            <div class="flex justify-center bg-gray-50 p-4 rounded-lg">
+                <div class="mermaid">
+                    sequenceDiagram
+                    autonumber
+                    participant C as Trình duyệt (Client)
+                    participant A as API (Server)
+
+                    Note over C, A: Quá trình Đăng nhập (Chỉ 1 lần)
+                    C->>A: Gửi Username + Password
+                    A->>A: Xác thực đúng người!
+                    A->>A: Sinh ra chuỗi JWT (Ký bằng SECRET_KEY)
+                    A-->>C: Trả về Token (eyJ...)
+                    
+                    Note over C, A: Lần gọi API tiếp theo (Thêm SP vào Giỏ)
+                    C->>A: Gọi API [Kèm theo Token trên Header]
+                    A->>A: Dùng SECRET_KEY kiểm tra Chữ ký
+                    
+                    alt Chữ ký HỢP LỆ & Chưa hết hạn
+                        A-->>C: Cho phép gọi hàm, trả về 200 OK
+                    else Chữ ký SAI (bị sửa) hoặc HẾT HẠN
+                        A--x+C: Từ chối! Trả về 401 Unauthorized
+                    end
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script render biểu đồ -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'base' });
+    </script>
+</body>
+</html>

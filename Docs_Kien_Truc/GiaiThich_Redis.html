@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giải thích Khái niệm: Redis là gì?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    </style>
+</head>
+<body class="text-gray-800 p-8">
+
+    <div class="max-w-4xl mx-auto bg-white p-10 rounded-xl shadow-lg border-t-8 border-red-500">
+        
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-red-600 mb-4">🚀 REDIS LÀ GÌ?</h1>
+            <p class="text-lg text-gray-600">Bí quyết giúp các trang web lớn như Shopee, Facebook chịu tải hàng triệu lượt truy cập mà không bị sập.</p>
+        </div>
+
+        <!-- 1. KHÁI NIỆM CƠ BẢN -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">1. Định nghĩa chuẩn (Nhưng khó hiểu)</h2>
+            <p class="bg-gray-100 p-4 rounded text-gray-700 italic border-l-4 border-gray-400">
+                "Redis là một hệ thống lưu trữ cấu trúc dữ liệu trong bộ nhớ (In-memory data structure store), mã nguồn mở, được sử dụng như một database, bộ nhớ đệm (cache) và message broker."
+            </p>
+        </div>
+
+        <!-- 2. GIẢI THÍCH ĐỜI THỰC -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2 text-blue-600">2. Giải thích theo cách "Bình dân" dễ hiểu nhất</h2>
+            
+            <h3 class="font-bold text-xl mb-2">Ví dụ: Thư viện sách khổng lồ 📚</h3>
+            <p class="mb-4 text-gray-700 leading-relaxed">
+                Tưởng tượng bạn là một Thủ thư. Thư viện của bạn có một <strong>Căn hầm chứa 1 triệu cuốn sách (Đại diện cho CSDL MySQL)</strong>.
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-blue-50 p-5 rounded-lg">
+                    <h4 class="font-bold text-red-500 mb-2">❌ Khi KHÔNG CÓ Redis (Chỉ dùng MySQL)</h4>
+                    <p class="text-gray-700 text-sm leading-relaxed">
+                        Mỗi khi có sinh viên đến mượn cuốn "Harry Potter", bạn phải đi thang máy xuống hầm, tìm cuốn sách, chép nội dung ra giấy rồi mang lên cho sinh viên.<br><br>
+                        <strong>Nhược điểm:</strong> Rất chậm! Nếu 1000 sinh viên cùng hỏi cuốn "Harry Potter" lúc sắp thi, bạn sẽ phải chạy xuống hầm 1000 lần. Bạn (Server) kiệt sức và ngất xỉu (Sập web).
+                    </p>
+                </div>
+                
+                <div class="bg-green-50 p-5 rounded-lg">
+                    <h4 class="font-bold text-green-600 mb-2">✅ Khi CÓ Redis (Bộ nhớ đệm Cache)</h4>
+                    <p class="text-gray-700 text-sm leading-relaxed">
+                        Bạn quyết định mua một <strong>Cái bàn làm việc (Đại diện cho Redis)</strong> đặt ngay trên mặt đất.<br><br>
+                        Lần đầu tiên có người hỏi cuốn "Harry Potter", bạn vẫn phải xuống hầm lấy (chậm). Nhưng lấy lên xong, bạn <strong>để luôn cuốn đó lên cái bàn trước mặt</strong>.<br><br>
+                        999 sinh viên tiếp theo hỏi, bạn chỉ việc lấy từ trên Bàn đưa luôn (nhanh như chớp). Bạn không phải xuống hầm nữa.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. TẠI SAO REDIS LẠI NHANH HƠN MYSQL? -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">3. Tại sao Redis lại nhanh thần tốc?</h2>
+            <ul class="list-disc pl-5 space-y-3 text-gray-700">
+                <li><strong>MySQL lưu trên Ổ cứng (HDD/SSD):</strong> Tốc độ đọc ổ cứng dù có là SSD thì vẫn tốn thời gian cơ học. Dữ liệu khi máy tắt không bị mất (Bền vững).</li>
+                <li><strong>Redis lưu trên thanh RAM:</strong> Tốc độ đọc RAM nhanh hơn Ổ cứng từ hàng chục đến hàng trăm lần. Nó giống như bộ não phản xạ ngay lập tức. Tuy nhiên, <em>nếu mất điện, dữ liệu trên RAM sẽ bay màu sạch sẽ</em> (Đó là lý do ta chỉ dùng Redis để lưu "tạm thời" - Cache).</li>
+            </ul>
+        </div>
+
+        <!-- 4. LÀM VIỆC VỚI REDIS NHƯ THẾ NÀO? -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">4. Cấu trúc lưu trữ của Redis: Key - Value</h2>
+            <p class="mb-4 text-gray-700">Khác với MySQL lưu thành các "Bảng" có cột/hàng phức tạp, Redis lưu dữ liệu theo kiểu chìa khóa và ổ khóa (Key - Value) cực kỳ đơn giản.</p>
+            
+            <div class="bg-gray-900 text-green-400 p-4 rounded font-mono text-sm overflow-x-auto">
+                <p class="text-gray-400">// Tưởng tượng Redis là một cuốn sổ tay khổng lồ, bạn tra từ khóa là ra kết quả:</p>
+                <p>Key: "laptop_trang_chu" ---> Value: "[ {id: 1, name: 'Macbook'}, {id: 2, name: 'Dell'} ]"</p>
+                <p>Key: "user_123_cart" ---> Value: "{ totalItems: 3, price: 5000 }"</p>
+            </div>
+        </div>
+
+        <!-- SƠ ĐỒ TRỰC QUAN -->
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">5. Luồng chạy trong ứng dụng Web của chúng ta</h2>
+            <div class="flex justify-center bg-gray-50 p-4 rounded-lg">
+                <div class="mermaid">
+                    sequenceDiagram
+                    autonumber
+                    participant C as Khách Hàng
+                    participant API as Web API
+                    participant R as REDIS (RAM)
+                    participant DB as MySQL (Ổ Cứng)
+
+                    C->>API: 1. Cho xem Danh sách Laptop?
+                    API->>R: 2. Redis ơi có sẵn danh sách này không?
+                    
+                    alt Đã có sẵn (Cache Hit)
+                        R-->>API: 3a. CÓ SẴN nè, lấy đi! (Chỉ mất 1ms)
+                        API-->>C: Trả kết quả ngay lập tức
+                    else Không có (Cache Miss)
+                        R--xAPI: 3b. Tủ trống không, đi kiếm chỗ khác đi
+                        API->>DB: 4. MySQL ơi, trích xuất dữ liệu cho tao (Mất 500ms)
+                        DB-->>API: 5. Dữ liệu đây
+                        API->>R: 6. Ném bản sao vào Redis cất đi nhé, 30 phút sau xóa.
+                        API-->>C: Trả kết quả cho khách (Hơi chậm 1 tí)
+                    end
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script render biểu đồ -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'base' });
+    </script>
+</body>
+</html>

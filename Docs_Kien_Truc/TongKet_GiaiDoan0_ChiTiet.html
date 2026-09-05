@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tổng Kết Giai Đoạn 0: Hạ Tầng Cốt Lõi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .folder-tree { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+        .project-card { border-left-width: 6px; }
+    </style>
+</head>
+<body class="text-gray-800 p-8">
+
+    <div class="max-w-6xl mx-auto">
+        
+        <!-- HEADER -->
+        <div class="text-center mb-12 bg-white p-10 rounded-2xl shadow-sm border border-gray-100">
+            <span class="bg-indigo-100 text-indigo-800 text-sm font-bold px-4 py-1 rounded-full uppercase tracking-wider">Tài liệu Nội bộ</span>
+            <h1 class="text-4xl font-extrabold text-gray-900 mt-6 mb-4">🏆 Tổng Kết Giai Đoạn 0: Hạ Tầng Cốt Lõi</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Tài liệu này lưu trữ toàn bộ cấu trúc thư mục, chức năng của từng file và luồng hoạt động của bộ khung Architecture mà chúng ta đã xây dựng cho dự án LaptopCommerce (Modular Monolith).</p>
+        </div>
+
+        <!-- PHẦN 1: TỔ CHỨC CÂY THƯ MỤC & MỤC ĐÍCH -->
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <span class="text-3xl mr-3">📂</span> Cấu trúc File & Chức năng chi tiết
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            
+            <!-- 1. SharedKernel -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 project-card border-red-500">
+                <h3 class="text-xl font-bold text-red-600 mb-2">1. LaptopCommerce.SharedKernel</h3>
+                <p class="text-sm text-gray-600 mb-4"><strong>Mục đích:</strong> Trái tim của hệ thống. Chứa các khái niệm cốt lõi nhất (DDD Base) và mẫu thiết kế xử lý lỗi (Result Pattern) dùng chung cho TOÀN BỘ dự án.</p>
+                
+                <div class="bg-gray-900 text-gray-300 p-4 rounded-lg folder-tree overflow-x-auto">
+                    <div>📁 Domain/</div>
+                    <div class="pl-4 border-l border-gray-700 ml-2">
+                        <div class="py-1">📄 <span class="text-yellow-300">Entity.cs</span>: Lớp cha của mọi thực thể. Cung cấp cơ chế so sánh 2 thực thể dựa vào ID.</div>
+                        <div class="py-1">📄 <span class="text-yellow-300">AggregateRoot.cs</span>: Thực thể Gốc. Chứa danh sách các Domain Events (Sự kiện nội bộ).</div>
+                        <div class="py-1">📄 <span class="text-yellow-300">IDomainEvent.cs</span>: Đánh dấu một sự kiện xảy ra bên trong 1 Module.</div>
+                    </div>
+                    <div class="mt-2">📁 Results/</div>
+                    <div class="pl-4 border-l border-gray-700 ml-2">
+                        <div class="py-1">📄 <span class="text-green-300">Error.cs</span>: Định nghĩa chuẩn Lỗi (Mã lỗi, Lời nhắn).</div>
+                        <div class="py-1">📄 <span class="text-green-300">Result.cs / ResultT.cs</span>: Thay thế hoàn toàn cho Exception (Try/Catch). Ép mọi hàm phải trả về trạng thái Thành Công/Thất Bại rõ ràng.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Application.Abstractions -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 project-card border-blue-500">
+                <h3 class="text-xl font-bold text-blue-600 mb-2">2. LaptopCommerce.Application.Abstractions</h3>
+                <p class="text-sm text-gray-600 mb-4"><strong>Mục đích:</strong> Định nghĩa các "Ổ cắm" (Interfaces). Ép kiến trúc tuân thủ CQRS. Không chứa code thực thi (chỉ khai báo luật lệ).</p>
+                
+                <div class="bg-gray-900 text-gray-300 p-4 rounded-lg folder-tree overflow-x-auto">
+                    <div>📁 Messaging/ <span class="text-gray-500 text-xs">(Kiến trúc CQRS)</span></div>
+                    <div class="pl-4 border-l border-gray-700 ml-2">
+                        <div class="py-1">📄 <span class="text-blue-300">ICommand.cs</span>: Lệnh GHI dữ liệu (Bắt buộc trả về Result).</div>
+                        <div class="py-1">📄 <span class="text-blue-300">IQuery.cs</span>: Lệnh ĐỌC dữ liệu (Bắt buộc trả về Result&lt;T&gt;).</div>
+                        <div class="py-1">📄 <span class="text-blue-300">ICommandHandler/IQueryHandler</span>: Người xử lý lệnh.</div>
+                    </div>
+                    <div class="mt-2">📁 Caching/ & 📁 Data/ & 📁 Authentication/</div>
+                    <div class="pl-4 border-l border-gray-700 ml-2">
+                        <div class="py-1">📄 <span class="text-purple-300">ICacheService.cs</span>: Hợp đồng cho dịch vụ Cache (Redis).</div>
+                        <div class="py-1">📄 <span class="text-purple-300">IUnitOfWork.cs</span>: Hợp đồng lưu DB (Tránh lưu lắt nhắt).</div>
+                        <div class="py-1">📄 <span class="text-purple-300">IJwtProvider.cs</span>: Hợp đồng sinh Token JWT.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Contracts -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 project-card border-green-500">
+                <h3 class="text-xl font-bold text-green-600 mb-2">3. LaptopCommerce.Contracts</h3>
+                <p class="text-sm text-gray-600 mb-4"><strong>Mục đích:</strong> Đại sứ quán. Nơi chứa các "Sự kiện Tích hợp" (Integration Events) để các Module khác nhau nói chuyện mà không bị phụ thuộc code vào nhau.</p>
+                
+                <div class="bg-gray-900 text-gray-300 p-4 rounded-lg folder-tree overflow-x-auto">
+                    <div>📁 Events/</div>
+                    <div class="pl-4 border-l border-gray-700 ml-2">
+                        <div class="py-1">📄 <span class="text-green-300">IIntegrationEvent.cs</span>: Chuẩn chung cho mọi tin nhắn liên module.</div>
+                        <div class="py-1">📄 <span class="text-green-300">IntegrationEvent.cs</span>: Dùng từ khóa <code>record</code> để đảm bảo tính Bất Biến (Immutability). Tự động sinh ID và Timestamp (lịch sử không thể thay đổi).</div>
+                        <div class="py-1">📄 <span class="text-green-300">IEventBus.cs</span>: Giao diện trạm bưu điện (để quăng sự kiện lên RabbitMQ/Kafka).</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Infrastructure.Shared -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 project-card border-purple-500">
+                <h3 class="text-xl font-bold text-purple-600 mb-2">4. LaptopCommerce.Infrastructure.Shared</h3>
+                <p class="text-sm text-gray-600 mb-4"><strong>Mục đích:</strong> Các "Phích cắm" thực tế. Triển khai code tương tác trực tiếp với công nghệ bên ngoài (Redis, JWT, MySQL).</p>
+                
+                <div class="bg-gray-900 text-gray-300 p-4 rounded-lg folder-tree overflow-x-auto">
+                    <div>📁 Caching/</div>
+                    <div class="pl-4 border-l border-gray-700 ml-2 mb-2">
+                        <div class="py-1">📄 <span class="text-pink-300">RedisCacheService.cs</span>: Kết nối Redis. Chứa logic Deserialize JSON và cài đặt Bom hẹn giờ (TTL) chống đầy RAM.</div>
+                    </div>
+                    <div>📁 Data/</div>
+                    <div class="pl-4 border-l border-gray-700 ml-2 mb-2">
+                        <div class="py-1">📄 <span class="text-pink-300">DbConnectionFactory.cs</span>: Mở đường ống kết nối thô (Raw Connection) tới MySQL dành riêng cho các truy vấn siêu tốc (Dapper).</div>
+                    </div>
+                    <div>📁 Authentication/</div>
+                    <div class="pl-4 border-l border-gray-700 ml-2">
+                        <div class="py-1">📄 <span class="text-pink-300">JwtOptions.cs</span>: Bản thiết kế hứng dữ liệu từ appsettings.</div>
+                        <div class="py-1">📄 <span class="text-pink-300">JwtProvider.cs</span>: Máy in thẻ JWT (Băm chữ ký bằng HMAC SHA256).</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- PHẦN 2: API & LUỒNG HOẠT ĐỘNG -->
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <span class="text-3xl mr-3">⚙️</span> Entry Point & Luồng chạy Hệ thống
+        </h2>
+
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-12">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">LaptopCommerce.Api (Cổng chính)</h3>
+            <p class="text-gray-700 mb-6">Đây là dự án Web API, đóng vai trò Cửa ngõ. Các file quan trọng nhất tại đây:</p>
+            
+            <ul class="list-disc pl-6 text-gray-700 space-y-3 mb-8">
+                <li><code>appsettings.json</code>: Lưu các biến môi trường nhạy cảm (JWT Secret, Database Connection String). Giúp linh hoạt thay đổi trên Production mà không cần build lại code.</li>
+                <li><code>Program.cs</code>: Nơi cài đặt Middleware. Nổi bật nhất là việc thiết lập Bảo vệ cổng <code>AddJwtBearer</code>, kiểm tra dấu mộc đỏ trước khi cho request đi vào các Module.</li>
+            </ul>
+
+            <h4 class="font-bold text-gray-800 mb-4 border-t pt-4">Sơ đồ Luồng hoạt động (Architecture Flow)</h4>
+            <div class="flex justify-center bg-gray-50 p-4 rounded-lg">
+                <div class="mermaid">
+                    graph TD
+                    Client((Khách hàng)) -->|1. Gọi API Get Product| API[LaptopCommerce.Api<br>Program.cs]
+                    
+                    API -->|2. Xét thẻ JWT| JWT{Hợp lệ?}
+                    JWT -- Không --> Bouncer[Trả về 401 Unauthorized]
+                    JWT -- Có --> Module[Module Catalog]
+                    
+                    Module -->|3. Gọi IQuery| CQRS[IQueryHandler]
+                    
+                    CQRS -->|4. Hỏi Redis| Cache[RedisCacheService]
+                    Cache -- Có sẵn --> TrảKetQua[Trả về List Sản phẩm]
+                    Cache -- Không có --> Factory[DbConnectionFactory]
+                    
+                    Factory -->|5. Lấy từ DB| DB[(MySQL)]
+                    DB -->|6. Gói vào Result| Res[Result.Success<br>SharedKernel]
+                    Res --> TrảKetQua
+                    
+                    style API fill:#bfdbfe,stroke:#3b82f6
+                    style JWT fill:#fecaca,stroke:#ef4444
+                    style Module fill:#d9f99d,stroke:#84cc16
+                    style Cache fill:#e9d5ff,stroke:#a855f7
+                    style DB fill:#fed7aa,stroke:#f97316
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script render biểu đồ -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'base' });
+    </script>
+</body>
+</html>

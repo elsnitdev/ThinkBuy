@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giải thích Kiến trúc - Application Abstractions</title>
+    <!-- Tailwind CSS cho giao diện -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Cài đặt font chữ -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    </style>
+</head>
+<body class="text-gray-800 antialiased p-8">
+
+    <div class="max-w-5xl mx-auto bg-white p-10 rounded-xl shadow-lg">
+        
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-blue-700 mb-4">Giai đoạn 0: Hiểu về Application Abstractions</h1>
+            <p class="text-lg text-gray-600">Sử dụng biểu đồ sơ đồ (Diagrams) để trực quan hóa khái niệm ICacheService và IUnitOfWork</p>
+        </div>
+
+        <!-- PHẦN 1: ICacheService -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b-2 border-blue-200 pb-2 flex items-center">
+                <span class="text-3xl mr-3">🔌</span> 1. ICacheService (Mô hình Ổ cắm điện)
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <p class="mb-4 text-gray-700 leading-relaxed">
+                        <strong>ICacheService</strong> đóng vai trò như một chiếc ổ cắm điện trên tường. 
+                        Tầng nghiệp vụ (Ví dụ: Tính năng lấy danh sách sản phẩm) chỉ cần biết cách "cắm phích" vào ổ để lấy dữ liệu (Gọi hàm <code>GetAsync</code>).
+                    </p>
+                    <p class="mb-4 text-gray-700 leading-relaxed">
+                        Nó hoàn toàn không cần quan tâm đằng sau bức tường đó là nguồn điện từ đâu (Redis hay Memory Cache). Nhờ vậy, ta có thể dễ dàng thay đổi công nghệ Caching trong tương lai mà không làm hỏng tính năng hiện tại.
+                    </p>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-lg shadow-inner flex justify-center">
+                    <!-- Biểu đồ Mermaid -->
+                    <div class="mermaid">
+                        graph TD
+                        A[Tầng Nghiệp Vụ<br/>(Gọi GetAsync)] -->|Cắm phích| B((ICacheService<br>Interface Ổ cắm))
+                        B -.->|Giai đoạn 1| C[In-Memory Cache<br/>(RAM)]
+                        B -.->|Giai đoạn 7| D[Redis Server<br/>(Hệ thống lớn)]
+                        
+                        style B fill:#fef08a,stroke:#eab308,stroke-width:3px,color:#000
+                        style A fill:#bfdbfe,stroke:#3b82f6,stroke-width:2px,color:#000
+                        style C fill:#bbf7d0,stroke:#22c55e,stroke-width:1px,color:#000
+                        style D fill:#fecaca,stroke:#ef4444,stroke-width:1px,color:#000
+                    </div>
+                </div>
+            </div>
+
+            <!-- VÍ DỤ CODE (Mới thêm) -->
+            <div class="mt-8 bg-gray-900 rounded-lg shadow-md overflow-hidden">
+                <div class="bg-gray-800 px-4 py-2 flex items-center">
+                    <div class="flex space-x-2">
+                        <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                        <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                        <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                    </div>
+                    <span class="ml-4 text-sm text-gray-400 font-mono">ProductService.cs (Cách ứng dụng thực tế)</span>
+                </div>
+                <div class="p-5 overflow-x-auto">
+<pre class="font-mono text-sm leading-relaxed text-gray-300">
+<span class="text-purple-400">public async</span> <span class="text-teal-300">Task</span>&lt;<span class="text-teal-300">List</span>&lt;<span class="text-teal-300">Laptop</span>&gt;&gt; <span class="text-blue-300">GetDanhSachLaptopAsync</span>()
+{
+    <span class="text-purple-400">string</span> cacheKey = <span class="text-yellow-300">"laptop_trang_chu"</span>;
+
+    <span class="text-gray-500 italic">// 1. "Cắm phích": Thử lấy dữ liệu trực tiếp từ Cache (Rất nhanh, 1-2ms)</span>
+    <span class="text-purple-400">var</span> laptops = <span class="text-pink-400">await</span> _cacheService.<span class="text-blue-300">GetAsync</span>&lt;<span class="text-teal-300">List</span>&lt;<span class="text-teal-300">Laptop</span>&gt;&gt;(cacheKey);
+
+    <span class="text-pink-400">if</span> (laptops == <span class="text-purple-400">null</span>)
+    {
+        <span class="text-gray-500 italic">// 2. Nếu Cache trống (Ví dụ: Server vừa restart), lúc này mới phải lội xuống Database</span>
+        laptops = <span class="text-pink-400">await</span> _dbContext.Laptops.<span class="text-blue-300">ToListAsync</span>();
+
+        <span class="text-gray-500 italic">// 3. Cất ngay dữ liệu vào Cache để lần sau lấy cho lẹ (Hẹn giờ 30 phút sau tự hủy)</span>
+        <span class="text-pink-400">await</span> _cacheService.<span class="text-blue-300">SetAsync</span>(cacheKey, laptops, TimeSpan.<span class="text-blue-300">FromMinutes</span>(30));
+    }
+
+    <span class="text-pink-400">return</span> laptops;
+}
+</pre>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- PHẦN 2: IUnitOfWork -->
+        <div class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b-2 border-green-200 pb-2 flex items-center">
+                <span class="text-3xl mr-3">🛒</span> 2. IUnitOfWork (Mô hình Nút Thanh Toán)
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="order-2 md:order-1 bg-green-50 p-4 rounded-lg shadow-inner flex justify-center">
+                    <!-- Biểu đồ Mermaid -->
+                    <div class="mermaid">
+                        sequenceDiagram
+                        autonumber
+                        participant App as Tầng Nghiệp Vụ
+                        participant UoW as IUnitOfWork
+                        participant DB as Database
+
+                        App->>DB: Trừ số lượng kho (Lưu Nháp)
+                        App->>DB: Tạo Đơn hàng (Lưu Nháp)
+                        
+                        alt Thành công toàn bộ
+                            App->>UoW: Gọi SaveChangesAsync()
+                            UoW->>DB: 🟢 Ghi nhận chính thức (COMMIT)
+                        else Lỗi ở giữa chừng (Mất điện)
+                            App--xUoW: Phát hiện Lỗi
+                            UoW->>DB: 🔴 Hủy toàn bộ (ROLLBACK)
+                            DB-->>App: Trả lại số lượng kho như cũ
+                        end
+                    </div>
+                </div>
+                <div class="order-1 md:order-2">
+                    <p class="mb-4 text-gray-700 leading-relaxed">
+                        <strong>IUnitOfWork</strong> đại diện cho một <em>Giao dịch (Transaction)</em> trọn vẹn. 
+                        Nó giống như việc bạn đi siêu thị bỏ đồ vào giỏ. Mọi thay đổi trong cơ sở dữ liệu (Database) lúc này chỉ là <strong>lưu nháp</strong>.
+                    </p>
+                    <p class="mb-4 text-gray-700 leading-relaxed">
+                        Chỉ khi toàn bộ các bước logic (Trừ tồn kho, Tạo hóa đơn, Tính tiền) chạy trơn tru, ta mới gọi hàm <code>SaveChangesAsync()</code> để <strong>Ghi nhận chính thức (Commit)</strong>.
+                    </p>
+                    <p class="text-red-600 font-semibold bg-red-50 p-3 border-l-4 border-red-500 rounded">
+                        Nếu có bất kỳ lỗi nào xảy ra giữa chừng, hệ thống tự động Hủy bỏ (Rollback), đảm bảo dữ liệu không bị sai lệch (ví dụ: mất hàng trong kho nhưng khách chưa lên đơn).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script để render biểu đồ Mermaid -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'base' });
+    </script>
+</body>
+</html>

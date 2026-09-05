@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bản Thiết Kế Chi Tiết: Triển khai JWT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .code-block { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+        .step-card { background-color: white; border-radius: 0.75rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); padding: 2rem; margin-bottom: 2.5rem; border-left: 8px solid; }
+    </style>
+</head>
+<body class="text-gray-800 p-8">
+
+    <div class="max-w-5xl mx-auto">
+        
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-indigo-800 mb-4">📐 Bản Thiết Kế Chi Tiết: Code JWT</h1>
+            <p class="text-lg text-gray-600">Đi sâu vào từng dòng cấu hình và thư viện cụ thể sẽ sử dụng</p>
+        </div>
+
+        <!-- BƯỚC 1 -->
+        <div class="step-card border-yellow-400">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2 flex items-center">
+                <span class="bg-yellow-400 text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 text-lg shadow">1</span> 
+                Cấu hình Thông số JWT (Options Pattern)
+            </h2>
+            <p class="text-gray-700 mb-4">Mục tiêu: Đưa cấu hình nhạy cảm ra ngoài file JSON, sau đó map tự động vào một class C# lúc ứng dụng khởi động.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div>
+                    <h4 class="font-bold text-sm text-gray-500 mb-2">1. appsettings.json (Dự án API)</h4>
+                    <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+<pre class="code-block text-gray-300">
+<span class="text-blue-300">"Jwt"</span>: {
+  <span class="text-blue-300">"Issuer"</span>: <span class="text-green-300">"LaptopCommerceApi"</span>, <span class="text-gray-500">// Người cấp thẻ</span>
+  <span class="text-blue-300">"Audience"</span>: <span class="text-green-300">"LaptopCommerceClients"</span>, <span class="text-gray-500">// Đối tượng dùng</span>
+  <span class="text-blue-300">"SecretKey"</span>: <span class="text-green-300">"ChuoiNayPhaiDaiHon32KyTuDeBaoMat"</span>,
+  <span class="text-blue-300">"ExpirationInMinutes"</span>: <span class="text-yellow-300">60</span>
+}
+</pre>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm text-gray-500 mb-2">2. JwtOptions.cs (Dự án Infrastructure)</h4>
+                    <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+<pre class="code-block text-gray-300">
+<span class="text-purple-400">public class</span> <span class="text-yellow-200">JwtOptions</span>
+{
+    <span class="text-purple-400">public string</span> Issuer { <span class="text-purple-400">get</span>; <span class="text-purple-400">set</span>; } = <span class="text-purple-400">string</span>.Empty;
+    <span class="text-purple-400">public string</span> Audience { <span class="text-purple-400">get</span>; <span class="text-purple-400">set</span>; } = <span class="text-purple-400">string</span>.Empty;
+    <span class="text-purple-400">public string</span> SecretKey { <span class="text-purple-400">get</span>; <span class="text-purple-400">set</span>; } = <span class="text-purple-400">string</span>.Empty;
+    <span class="text-purple-400">public int</span> ExpirationInMinutes { <span class="text-purple-400">get</span>; <span class="text-purple-400">set</span>; }
+}
+</pre>
+                    </div>
+                </div>
+            </div>
+            <p class="text-sm text-blue-600 mt-3 font-semibold">👉 Tác động: Nhờ gộp chung thành class JwtOptions, khi code thuật toán sinh Token ta chỉ cần chèn <code>IOptions&lt;JwtOptions&gt;</code> vào là có ngay mọi cấu hình.</p>
+        </div>
+
+        <!-- BƯỚC 2 -->
+        <div class="step-card border-green-500">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2 flex items-center">
+                <span class="bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 text-lg shadow">2</span> 
+                Thuật toán sinh Token (JwtProvider.cs)
+            </h2>
+            <p class="text-gray-700 mb-4">Sử dụng thư viện <code>System.IdentityModel.Tokens.Jwt</code>. Mã nguồn chỗ này sẽ hơi phức tạp do dùng các thuật toán mật mã hóa (Cryptography). Dưới đây là lõi logic chính:</p>
+            
+            <div class="bg-gray-900 rounded-lg p-5 overflow-x-auto mb-4">
+<pre class="code-block text-gray-300">
+<span class="text-gray-500">// 1. Đóng gói thông tin người dùng vào Payload (Claims)</span>
+<span class="text-purple-400">var</span> claims = <span class="text-purple-400">new</span>[] {
+    <span class="text-purple-400">new</span> <span class="text-teal-300">Claim</span>(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+    <span class="text-purple-400">new</span> <span class="text-teal-300">Claim</span>(ClaimTypes.Role, <span class="text-green-300">"Admin"</span>)
+};
+
+<span class="text-gray-500">// 2. Lấy SecretKey đem đi băm (Hash) để làm Con dấu đỏ (Signature)</span>
+<span class="text-purple-400">var</span> key = <span class="text-purple-400">new</span> <span class="text-teal-300">SymmetricSecurityKey</span>(Encoding.UTF8.GetBytes(_options.SecretKey));
+<span class="text-purple-400">var</span> credentials = <span class="text-purple-400">new</span> <span class="text-teal-300">SigningCredentials</span>(key, SecurityAlgorithms.HmacSha256);
+
+<span class="text-gray-500">// 3. Ráp 3 phần: Header + Payload + Signature lại thành 1 Token</span>
+<span class="text-purple-400">var</span> token = <span class="text-purple-400">new</span> <span class="text-teal-300">JwtSecurityToken</span>(
+    _options.Issuer, _options.Audience, claims,
+    expires: DateTime.UtcNow.AddMinutes(_options.ExpirationInMinutes),
+    signingCredentials: credentials);
+
+<span class="text-gray-500">// 4. Xuất ra chuỗi chữ (eyJ...) gửi về cho Frontend</span>
+<span class="text-purple-400">return new</span> <span class="text-teal-300">JwtSecurityTokenHandler</span>().<span class="text-blue-300">WriteToken</span>(token);
+</pre>
+            </div>
+            <p class="text-sm text-green-600 mt-3 font-semibold">👉 Tác động: Giao diện (Web/App) sau khi gọi API Đăng nhập thành công sẽ nhận được chuỗi chữ từ hàm này và tự lưu vào trình duyệt (LocalStorage).</p>
+        </div>
+
+        <!-- BƯỚC 3 -->
+        <div class="step-card border-blue-500">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2 flex items-center">
+                <span class="bg-blue-500 text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 text-lg shadow">3</span> 
+                Đăng ký lính gác chặn API (Program.cs)
+            </h2>
+            <p class="text-gray-700 mb-4">Vào dự án <code>LaptopCommerce.Api</code>, cài thư viện <code>Microsoft.AspNetCore.Authentication.JwtBearer</code>. Cấu hình Middleware để mọi Request đi vào đều bị chặn lại xét giấy tờ.</p>
+            
+            <div class="bg-gray-900 rounded-lg p-5 overflow-x-auto">
+<pre class="code-block text-gray-300">
+builder.Services.<span class="text-blue-300">AddAuthentication</span>(JwtBearerDefaults.AuthenticationScheme)
+    .<span class="text-blue-300">AddJwtBearer</span>(options =>
+    {
+        options.TokenValidationParameters = <span class="text-purple-400">new</span> <span class="text-teal-300">TokenValidationParameters</span>
+        {
+            ValidateIssuer = <span class="text-purple-400">true</span>,
+            ValidateAudience = <span class="text-purple-400">true</span>,
+            ValidateLifetime = <span class="text-purple-400">true</span>, <span class="text-gray-500">// Token hết hạn chưa?</span>
+            ValidateIssuerSigningKey = <span class="text-purple-400">true</span>, <span class="text-gray-500">// Chữ ký có bị làm giả không?</span>
+            
+            ValidIssuer = configuration[<span class="text-green-300">"Jwt:Issuer"</span>],
+            ValidAudience = configuration[<span class="text-green-300">"Jwt:Audience"</span>],
+            IssuerSigningKey = <span class="text-purple-400">new</span> <span class="text-teal-300">SymmetricSecurityKey</span>(
+                Encoding.UTF8.GetBytes(configuration[<span class="text-green-300">"Jwt:SecretKey"</span>]))
+        };
+    });
+
+<span class="text-gray-500">// Chèn chốt gác vào Pipeline của Web Server</span>
+app.<span class="text-blue-300">UseAuthentication</span>();
+app.<span class="text-blue-300">UseAuthorization</span>();
+</pre>
+            </div>
+            <p class="text-sm text-blue-600 mt-3 font-semibold">👉 Tác động: Kể từ bây giờ, bất kỳ Controller nào có chữ <code>[Authorize]</code> trên đầu sẽ tự động chặn các người dùng gửi Token sai hoặc gửi Token hết hạn.</p>
+        </div>
+
+    </div>
+
+</body>
+</html>

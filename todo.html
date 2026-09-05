@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Backend Implementation Todo List - ThinkBuy</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #4f46e5;
+        --secondary: #10b981;
+        --bg: #f3f4f6;
+        --card-bg: #ffffff;
+        --text-main: #1f2937;
+        --text-muted: #6b7280;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg);
+        color: var(--text-main);
+        line-height: 1.6;
+        padding: 2rem;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .header h1 {
+        color: var(--primary);
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .header p {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+      }
+
+      .timeline {
+        max-width: 1000px;
+        margin: 0 auto;
+        position: relative;
+      }
+
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background-color: #e5e7eb;
+        transform: translateX(-50%);
+      }
+
+      .card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        width: calc(50% - 30px);
+        position: relative;
+        margin-bottom: 2rem;
+        transition: transform 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+      }
+
+      .card:nth-child(odd) {
+        left: 0;
+      }
+
+      .card:nth-child(even) {
+        left: calc(50% + 30px);
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 20px;
+        width: 20px;
+        height: 20px;
+        background-color: var(--primary);
+        border-radius: 50%;
+        border: 4px solid var(--bg);
+      }
+
+      .card:nth-child(odd)::before {
+        right: -40px;
+      }
+
+      .card:nth-child(even)::before {
+        left: -40px;
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #f3f4f6;
+        padding-bottom: 0.5rem;
+      }
+
+      .icon-container {
+        width: 50px;
+        height: 50px;
+        background-color: #eef2ff;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        color: var(--primary);
+        font-size: 1.5rem;
+      }
+
+      .card h2 {
+        font-size: 1.25rem;
+        color: var(--text-main);
+      }
+
+      .todo-list {
+        list-style: none;
+      }
+
+      .todo-list li {
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .todo-list li::before {
+        content: "\f111"; /* empty circle */
+        font-family: "Font Awesome 6 Free";
+        font-weight: 400;
+        color: var(--text-muted);
+        margin-right: 10px;
+        font-size: 0.9rem;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+
+      .status-todo {
+        background-color: #fef3c7;
+        color: #d97706;
+      }
+
+      .status-in-progress {
+        background-color: #dbeafe;
+        color: #2563eb;
+      }
+
+      @media (max-width: 768px) {
+        .timeline::before {
+          left: 30px;
+        }
+        .card {
+          width: calc(100% - 60px);
+          left: 60px !important;
+        }
+        .card::before {
+          left: -40px !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1><i class="fa-solid fa-rocket"></i> Kế Hoạch Triển Khai Backend</h1>
+      <p>Dự án ThinkBuy (Kiến trúc Modular Monolith / Clean Architecture)</p>
+      <p style="font-size: 0.9rem; margin-top: 5px">
+        <i
+          >Hiện trạng: Đã dựng khung thư mục (Scaffolding). Các module đang ở
+          dạng trống.</i
+        >
+      </p>
+    </div>
+
+    <div class="timeline">
+      <!-- Phase 1 -->
+      <div class="card">
+        <div class="status-badge status-todo">Bước 1</div>
+        <div class="card-header">
+          <div class="icon-container">
+            <i class="fa-solid fa-cubes"></i>
+          </div>
+          <h2>Xây Dựng BuildingBlocks</h2>
+        </div>
+        <ul class="todo-list">
+          <li>Định nghĩa Exceptions chung & Middleware xử lý lỗi.</li>
+          <li>Thiết lập Behavior cho MediatR (Validation, Logging).</li>
+          <li>Tạo các base class: Entity, AggregateRoot, DomainEvent.</li>
+          <li>Cấu hình shared DTOs (Pagination, Response...).</li>
+        </ul>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="card">
+        <div class="status-badge status-todo">Bước 2</div>
+        <div class="card-header">
+          <div class="icon-container">
+            <i class="fa-solid fa-database"></i>
+          </div>
+          <h2>Thiết Kế Domain & Cơ Sở Dữ Liệu</h2>
+        </div>
+        <ul class="todo-list">
+          <li>
+            Định nghĩa Entities (Product, Order, User...) trong lớp Domain.
+          </li>
+          <li>Tạo DbContext cho từng Module ở lớp Infrastructure.</li>
+          <li>Cấu hình Entity Framework Core (Fluent API).</li>
+          <li>Tạo Migration và Seed Data ban đầu.</li>
+        </ul>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="card">
+        <div class="status-badge status-todo">Bước 3</div>
+        <div class="card-header">
+          <div class="icon-container">
+            <i class="fa-solid fa-gears"></i>
+          </div>
+          <h2>Nghiệp Vụ Application (CQRS)</h2>
+        </div>
+        <ul class="todo-list">
+          <li>Viết Commands (Create/Update/Delete) & Handlers.</li>
+          <li>
+            Viết Queries (Get) & Handlers (Sử dụng Dapper nếu cần tốc độ).
+          </li>
+          <li>Định nghĩa FluentValidation cho các Requests.</li>
+          <li>Bắn & Lắng nghe Domain Events trong nội bộ Module.</li>
+        </ul>
+      </div>
+
+      <!-- Phase 4 -->
+      <div class="card">
+        <div class="status-badge status-todo">Bước 4</div>
+        <div class="card-header">
+          <div class="icon-container">
+            <i class="fa-solid fa-network-wired"></i>
+          </div>
+          <h2>Endpoints & API Gateway</h2>
+        </div>
+        <ul class="todo-list">
+          <li>
+            Tạo Minimal APIs (Cart, Catalog, Identity...) trong lớp Endpoints.
+          </li>
+          <li>Tích hợp Swagger/OpenAPI (có Bearer Token).</li>
+          <li>Cấu hình Authentication / Authorization (JWT).</li>
+          <li>
+            Đăng ký Dependency Injection tại <code>LaptopCommerce.Api</code>.
+          </li>
+        </ul>
+      </div>
+
+      <!-- Phase 5 -->
+      <div class="card">
+        <div class="status-badge status-todo">Bước 5</div>
+        <div class="card-header">
+          <div class="icon-container">
+            <i class="fa-solid fa-envelope-open-text"></i>
+          </div>
+          <h2>Giao Tiếp Inter-Module & Background Worker</h2>
+        </div>
+        <ul class="todo-list">
+          <li>Cài đặt MassTransit + RabbitMQ để pub/sub Integration Events.</li>
+          <li>Lắng nghe Events cross-module (VD: Đặt hàng -> Trừ kho).</li>
+          <li>
+            Chạy Background Services trong <code>LaptopCommerce.Worker</code>.
+          </li>
+          <li>Tích hợp Redis Caching cho Catalog/Cart.</li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

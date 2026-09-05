@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bản Đồ Tác Chiến: Module Identity</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .layer-card { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); padding: 1.5rem; margin-bottom: 1.5rem; border-left: 6px solid; }
+        .code-snippet { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; background-color: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-top: 0.5rem; }
+    </style>
+</head>
+<body class="text-gray-800 p-8">
+
+    <div class="max-w-5xl mx-auto">
+        
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-blue-800 mb-4">🗺️ Bản Đồ Tác Chiến: Module Identity</h1>
+            <p class="text-lg text-gray-600">Mục tiêu: Đăng ký, Đăng nhập, Băm mật khẩu (Bcrypt) và Cấp phát JWT Token.</p>
+        </div>
+
+        <!-- 4 TẦNG KIẾN TRÚC -->
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <span class="text-3xl mr-3">🏗️</span> Trình tự 4 Tầng (Clean Architecture)
+        </h2>
+        <p class="text-gray-600 mb-6">Chúng ta sẽ code từ LÕI (Domain) đi dần ra BỀ MẶT (Endpoints). Không bao giờ được phép làm ngược lại.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+            
+            <!-- Layer 1: Domain -->
+            <div class="layer-card border-red-500">
+                <h3 class="text-xl font-bold text-red-600 mb-2">1. Tầng Domain (Lõi)</h3>
+                <p class="text-sm text-gray-700">Nơi định nghĩa các Thực thể (Entities) cốt lõi nhất. Tầng này "mù tịt" về Database hay API, nó chỉ chứa logic kinh doanh tinh khiết.</p>
+                <ul class="list-disc pl-5 mt-3 text-sm text-gray-600 space-y-1">
+                    <li><code>User.cs</code>: Kế thừa từ <code>AggregateRoot</code> (đã làm ở Giai đoạn 0). Có các thuộc tính: Email, PasswordHash, Role.</li>
+                    <li><strong>Luật:</strong> Trạng thái của User chỉ được phép thay đổi thông qua các hàm có ý nghĩa (ví dụ: <code>ChangePassword()</code>) thay vì dùng Setters <code>set;</code> trực tiếp.</li>
+                </ul>
+            </div>
+
+            <!-- Layer 2: Application -->
+            <div class="layer-card border-yellow-500">
+                <h3 class="text-xl font-bold text-yellow-600 mb-2">2. Tầng Application (Ứng dụng)</h3>
+                <p class="text-sm text-gray-700">Chứa các Use-Cases (Mục đích sử dụng). Áp dụng triệt để kiến trúc CQRS (Giai đoạn 0).</p>
+                <ul class="list-disc pl-5 mt-3 text-sm text-gray-600 space-y-1">
+                    <li><strong>Đăng ký:</strong> <code>RegisterUserCommand</code> & <code>RegisterUserCommandHandler</code>.</li>
+                    <li><strong>Đăng nhập:</strong> <code>LoginQuery</code> & <code>LoginQueryHandler</code>.</li>
+                    <li><strong>Giao diện:</strong> <code>IUserRepository</code> (Chỉ tạo interface ở đây, bắt Infrastructure code logic thực tế).</li>
+                </ul>
+            </div>
+
+            <!-- Layer 3: Infrastructure -->
+            <div class="layer-card border-green-500">
+                <h3 class="text-xl font-bold text-green-600 mb-2">3. Tầng Infrastructure (Hạ tầng)</h3>
+                <p class="text-sm text-gray-700">Nơi giao tiếp thực tế với thế giới bên ngoài (Database MySQL, Thuật toán Băm mật khẩu).</p>
+                <ul class="list-disc pl-5 mt-3 text-sm text-gray-600 space-y-1">
+                    <li><code>IdentityDbContext</code>: Cấu hình Entity Framework Core ánh xạ class User thành bảng <code>users</code> trong MySQL.</li>
+                    <li><code>UserRepository.cs</code>: Code các câu lệnh SQL/LINQ để tìm kiếm User theo Email.</li>
+                    <li><code>PasswordHasher.cs</code>: Dùng thư viện <strong>BCrypt</strong> để băm nát mật khẩu trước khi lưu.</li>
+                </ul>
+            </div>
+
+            <!-- Layer 4: Endpoints -->
+            <div class="layer-card border-blue-500">
+                <h3 class="text-xl font-bold text-blue-600 mb-2">4. Tầng Endpoints (Cổng giao tiếp)</h3>
+                <p class="text-sm text-gray-700">Nơi bóc tách các Request HTTP từ Client (React/Mobile) gửi tới và ném vào tầng Application xử lý.</p>
+                <ul class="list-disc pl-5 mt-3 text-sm text-gray-600 space-y-1">
+                    <li>Sử dụng <strong>Carter</strong> thay cho Controllers cũ kỹ. Giúp định nghĩa API cực kỳ ngắn gọn.</li>
+                    <li>API Đăng ký: <code>POST /api/identity/register</code></li>
+                    <li>API Đăng nhập: <code>POST /api/identity/login</code></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- LUỒNG ĐĂNG NHẬP -->
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <span class="text-3xl mr-3">🔄</span> Sơ đồ dòng chảy (Ví dụ: Chức năng Đăng nhập)
+        </h2>
+        
+        <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-gray-200">
+            <div class="flex justify-center bg-gray-50 p-4 rounded-lg">
+                <div class="mermaid">
+                    sequenceDiagram
+                    autonumber
+                    participant C as Khách Hàng (Postman)
+                    participant E as Tầng Endpoints
+                    participant A as Tầng Application<br>(LoginQuery)
+                    participant I as Tầng Infrastructure<br>(UserRepository)
+                    participant J as Máy in Token<br>(JwtProvider)
+
+                    C->>E: POST /api/identity/login (Email, Pass)
+                    E->>A: Ném Request vào LoginQueryHandler
+                    
+                    A->>I: Ê Repository, tìm cho tao User có Email này!
+                    alt Không tìm thấy Email
+                        I-->>A: Null
+                        A-->>E: Trả về Result.Failure (Lỗi: Sai Email)
+                    else Tìm thấy Email
+                        I-->>A: Trả về Object User (Kèm Mật khẩu đã Băm)
+                        A->>A: Thuật toán BCrypt so sánh 2 mật khẩu
+                        
+                        alt Mật khẩu KHÔNG khớp
+                            A-->>E: Trả về Result.Failure (Lỗi: Sai Pass)
+                        else Mật khẩu HỢP LỆ
+                            A->>J: Ê JwtProvider, in cho tao cái Thẻ JWT
+                            J-->>A: eyJhbG... (Chuỗi JWT)
+                            A-->>E: Trả về Result.Success (Kèm chuỗi Token)
+                            E-->>C: 200 OK + Trả JWT Token cho khách
+                        end
+                    end
+                </div>
+            </div>
+            <p class="text-sm text-center text-gray-500 mt-4 italic">Hãy nhìn cách Tầng Application (màu vàng) đứng ở giữa làm "Nhạc trưởng", điều phối toàn bộ các công cụ (DB, JWT, Bcrypt) xung quanh.</p>
+        </div>
+
+    </div>
+
+    <!-- Script render biểu đồ -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'base' });
+    </script>
+</body>
+</html>
